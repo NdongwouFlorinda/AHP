@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHP Engine - Prise de Décision</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navbar / Header -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <div class="logo-icon">▶</div>
+                <h1 class="logo-text">AHP Engine</h1>
+            </div>
+            <div class="progress-info" style="display: flex; gap: 1rem; align-items: center;">
+                <span class="step-indicator" id="step-indicator">Étape 1 / 8</span>
+                <button id="theme-toggle" class="btn-theme-toggle" title="Mode Sombre/Clair">🌙</button>
+            </div>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-fill" id="progress-fill" style="width: 12.5%;"></div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Etape 1: Objectif -->
+        <section class="step-section active" id="step-1">
+            <div class="section-header">
+                <h2 class="gradient-text">Quel est votre objectif ?</h2>
+                <p>Définissez la décision principale que vous devez prendre.</p>
+            </div>
+            <div class="input-card hover-fx">
+                <input type="text" id="objective-input" class="large-input center-text" placeholder="Ex: Choisir le meilleur logiciel..." autocomplete="off">
+            </div>
+        </section>
+
+        <!-- Etape 2: Critères -->
+        <section class="step-section" id="step-2">
+            <div class="section-header">
+                <h2>Quels sont vos critères ?</h2>
+                <p>Listez les critères principaux pour juger les alternatives.</p>
+            </div>
+            <div class="list-container" id="criteria-list">
+                <!-- injecté via JS -->
+            </div>
+            <button class="btn-dashed w-full" id="add-criterion-btn">
+                <span class="icon">+</span> Ajouter un critère
+            </button>
+        </section>
+
+        <!-- Etape 3: Sous-critères -->
+        <section class="step-section" id="step-3">
+            <div class="section-header">
+                <h2>Sous-critères (Optionnel)</h2>
+                <p>Détaillez vos critères principaux pour plus de précision.</p>
+            </div>
+            <div class="grid-container" id="subcriteria-list">
+                <!-- injecté via JS -->
+            </div>
+        </section>
+
+        <!-- Etape 4: Comparaisons Pairwise -->
+        <section class="step-section" id="step-4">
+            <div class="section-header">
+                <h2>Comparaisons</h2>
+                <p>Évaluez l'importance relative de chaque paire avec le curseur.</p>
+            </div>
+            <div class="pairwise-container" id="pairwise-list">
+                <!-- injecté via JS -->
+            </div>
+        </section>
+
+        <!-- Etape 5: Cohérence -->
+        <section class="step-section" id="step-5">
+            <div class="section-header">
+                <h2>Cohérence</h2>
+                <p>Vérification de la logique de vos jugements.</p>
+            </div>
+            <div class="consistency-container" id="consistency-list">
+                <!-- injecté via JS -->
+            </div>
+            <div class="consistency-actions card shadow" id="consistency-actions" style="display: none;">
+                <button class="btn-outline" id="fix-manually-btn">Corriger moi-même</button>
+                <button class="btn-primary" id="auto-fix-btn">Appliquer les suggestions</button>
+                <div class="flex-spacer"></div>
+                <button class="btn-text" id="ignore-warning-btn">Ignorer l'alerte</button>
+            </div>
+        </section>
+
+        <!-- Etape 6: Alternatives -->
+        <section class="step-section" id="step-6">
+            <div class="section-header">
+                <h2>Quelles sont vos alternatives ?</h2>
+                <p>Listez les options finales parmi lesquelles vous devez choisir.</p>
+            </div>
+            <div class="list-container" id="alternatives-list">
+                <!-- injecté via JS -->
+            </div>
+            <button class="btn-dashed w-full" id="add-alternative-btn">
+                <span class="icon">+</span> Ajouter une alternative
+            </button>
+        </section>
+
+        <!-- Etape 7: Scores -->
+        <section class="step-section" id="step-7">
+            <div class="section-header">
+                <h2>Notes des Alternatives</h2>
+                <p>Attribuez une note brute (ex: 0 à 100, prix en €, etc.) pour chaque critère/alternative.</p>
+            </div>
+            <div class="table-card shadow scrollable-x">
+                <table id="scores-table" class="modern-table">
+                    <thead>
+                        <tr id="scores-thead-tr" class="bg-light">
+                            <!-- injecté via JS -->
+                        </tr>
+                    </thead>
+                    <tbody id="scores-tbody">
+                        <!-- injecté via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Etape 8: Résultats -->
+        <section class="step-section" id="step-8">
+            <div class="section-header">
+                <h2 class="text-xxl">Résultats</h2>
+                <p>Voici le classement final selon vos évaluations.</p>
+            </div>
+            <div class="chart-card shadow mb-8">
+                <canvas id="resultsChart"></canvas>
+            </div>
+            <div class="ranking-container" id="ranking-list" style="margin-bottom: 2rem;">
+                <!-- injecté via JS -->
+            </div>
+            <div class="text-center" style="margin-top: 3rem;">
+                <button class="btn-primary" id="restart-btn" style="font-size: 1.125rem; padding: 1rem 2rem; box-shadow: 0 4px 14px rgba(16,185,129,0.3);">
+                    Nouvelle décision <span class="icon">↺</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer de Navigation -->
+    <footer class="footer-nav">
+        <div class="footer-content">
+            <button class="btn-secondary" id="prev-btn" disabled>
+                <span class="icon">←</span> Retour
+            </button>
+            <button class="btn-primary" id="next-btn">
+                Continuer <span class="icon">→</span>
+            </button>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
